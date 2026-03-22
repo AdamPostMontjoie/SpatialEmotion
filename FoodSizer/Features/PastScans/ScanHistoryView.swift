@@ -37,7 +37,13 @@ struct ScanHistoryView: View {
             .navigationTitle("History")
             // 2. The Dial (Alerts)
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
+            
         }
+        destination: { store in
+                // 3. The Destination (Where the hallway leads)
+                // Swift automatically knows this 'store' belongs to PastScanDetailFeature
+                PastScanDetailView(store: store)
+            }
     }
 }
 

@@ -11,12 +11,12 @@ import ComposableArchitecture
 @main
 struct FoodSizer: App {
     
-    static let store = Store(initialState: ContactsFeature.State()) {
-        ContactsFeature()
+    static let store = Store(initialState: RootFeature.State()) {
+        RootFeature()
       }
     var body: some Scene {
         WindowGroup {
-            ContactsView(store:FoodSizer.store)
+            RootView(store:FoodSizer.store)
         }
     }
 }

@@ -45,6 +45,10 @@ struct ScanHistoryFeature {
             }
             
         }
+        .ifLet(\.$destination, action: \.destination)
+        .forEach(\.path, action: \.path) {
+                PastScanDetailFeature()
+            }
     }
 }
 

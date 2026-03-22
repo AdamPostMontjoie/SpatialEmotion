@@ -16,7 +16,7 @@ struct PastScanDetailView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text(store.name)
+            Text(store.name ?? "Unknown")
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
