@@ -22,6 +22,7 @@ struct ARViewContainer: UIViewRepresentable {
         let config = ARWorldTrackingConfiguration()
         if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
             config.sceneReconstruction = .mesh // turns on lidar mesh
+            arView.debugOptions = [.showSceneUnderstanding]
         }
         //start the camera and sensors
         arView.session.run(config)

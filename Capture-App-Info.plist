@@ -4,6 +4,8 @@
 <dict>
 	<key></key>
 	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -13,5 +15,7 @@
 		<key>NSAllowsArbitraryLoadsUsageDescription</key>
 		<dict/>
 	</dict>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>
