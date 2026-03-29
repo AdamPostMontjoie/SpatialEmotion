@@ -13,7 +13,10 @@ struct CameraView:View {
     
     var body: some View {
         ZStack {
-            ARViewContainer()
+            ARViewContainer(
+                onSessionCreated: { session in
+                    store.send(.sessionCreated(session))
+                })
                 .ignoresSafeArea()
             VStack {
                 Spacer()
