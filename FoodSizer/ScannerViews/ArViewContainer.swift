@@ -13,19 +13,57 @@ import RealityKit
 @MainActor
 struct ARViewContainer: UIViewRepresentable {
     
-    //callback function that sends it from view
     var onSessionCreated:(UncheckedSession) -> Void
     var currentMode:CameraMode
+    var onReadyStateChanged: (Bool) -> Void
     
-    class Coordinator {
-        var lastMode:CameraMode? = nil
-    }
+    @MainActor
+        class Coordinator: NSObject, ARSessionDelegate {
+            var parent: ARViewContainer
+            var lastMode: CameraMode? = nil
+            var lastReportedReadyState: Bool = false
+            
+            init(parent: ARViewContainer) {
+                self.parent = parent
+            }
+            
+            // nonisolated so it can run on the background hardware thread safely
+            nonisolated func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+                
+                // non-sendable hardware data evaluated immediately on the background thread
+                let hasFace = anchors.contains(where: { $0 is ARFaceAnchor })
+                let hasMesh = anchors.contains(where: { $0 is ARMeshAnchor })
+                
+                // task run on main actor when 
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    
+                    let isReady: Bool
+                    if self.parent.currentMode == .face {
+                        isReady = hasFace
+                    } else if self.parent.currentMode == .lidar {
+                        isReady = hasMesh
+                    } else {
+                        isReady = false
+                    }
+                    
+                    // The Bouncer Logic
+                    if isReady != self.lastReportedReadyState {
+                        self.lastReportedReadyState = isReady
+                        self.parent.onReadyStateChanged(isReady)
+                    }
+                }
+            }
+        }
+    
     func makeCoordinator() -> Coordinator {
-        return Coordinator()
+        return Coordinator(parent: self)
     }
     
-    func makeUIView(context: Context) ->ARView {
+    func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
+        
+        arView.session.delegate = context.coordinator
         
         let wrappedSession = UncheckedSession(rawValue: arView.session)
         //dispatch session
@@ -34,7 +72,10 @@ struct ARViewContainer: UIViewRepresentable {
         }
         return arView
     }
+    
     func updateUIView(_ uiView: ARView, context: Context) {
+        context.coordinator.parent = self
+        
         guard self.currentMode != context.coordinator.lastMode else { return }
         context.coordinator.lastMode = self.currentMode
         switch self.currentMode{

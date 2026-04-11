@@ -15,6 +15,7 @@ struct CameraFeature {
      var currentMode:CameraMode = .lidar
      var savedMeshUrl:URL?
      var savedFaceUrl:URL?
+     var isReadyToScan: Bool = false
     }
     
     enum Action {
@@ -23,6 +24,7 @@ struct CameraFeature {
         case scanCompleted(URL)
         case saveToDataBase
         case delegate(Delegate)
+        case readyStateChanged(isReady:Bool)
         enum Delegate {
             case scanSavedToDb(scanId:UUID,objUrl:URL,faceUrl:URL)
         }
@@ -37,6 +39,9 @@ var body: some Reducer<State, Action> {
         case let .sessionCreated(sesh):
             state.session = sesh
             print("session created")
+            return .none
+        case let .readyStateChanged(isReady):
+            state.isReadyToScan = isReady
             return .none
         case .scanButtonTapped:
             print("button tapped")
@@ -60,6 +65,7 @@ var body: some Reducer<State, Action> {
                 state.savedMeshUrl = url
                 print("SUCCESS: Object Mesh saved to \(url)")
                 state.currentMode = .face
+                state.isReadyToScan = false
                 return .none
             }
             else {

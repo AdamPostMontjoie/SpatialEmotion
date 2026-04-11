@@ -17,7 +17,11 @@ struct CameraView:View {
                 onSessionCreated: { session in
                     store.send(.sessionCreated(session))
                 },
-                currentMode: store.currentMode)
+                currentMode: store.currentMode,
+                onReadyStateChanged:{ isReady in
+                    store.send(.readyStateChanged(isReady:isReady))
+                })
+                
                 .ignoresSafeArea()
             VStack {
                 Spacer()
@@ -31,9 +35,10 @@ struct CameraView:View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.blue)
+                        .background(store.isReadyToScan ? Color.blue: Color.gray)
                         .cornerRadius(16)
                 }
+                .disabled(!store.isReadyToScan)
                     .padding(.horizontal, 40)
                     .padding(.bottom, 40)
             }
