@@ -17,34 +17,37 @@ import ComposableArchitecture
 struct ScanReviewFeature {
   @ObservableState
  struct State: Equatable {
-        var count = 0
-        var numberFact: String?
+           var scanId: UUID
+           var objUrl: URL
+           var faceUrl: URL
       }
     enum Action {
-        case decrementButtonTapped
-        case incrementButtonTapped
-        case numberFactButtonTapped
-        case numberFactResponse(String)
+        case deleteButtonTapped
+        case delegate(Delegate)
+        enum Delegate{
+            case scanRemoved
+        }
       }
 
   var body: some Reducer<State, Action> {
     Reduce { state, action in
       switch action {
-      case .decrementButtonTapped:
-        state.count -= 1
-        return .none
-
-      case .incrementButtonTapped:
-        state.count += 1
-        return .none
-
-      case .numberFactButtonTapped:
+      case .deleteButtonTapped:
+        return .run {[id = state.scanId, obj = state.objUrl, face = state.faceUrl] send in
+           //   await try deleteScanClient //implement to delete urls from swiftdata and phone
+            do {
+            // try await deleteScanClient.delete(id: id, objUrl: obj, faceUrl: face)
+            print("SUCCESS: Deleted from SSD and SwiftData")
+                              
+                              // 3. Fire the delegate directly from the background thread!
+                await send(.delegate(.scanRemoved))
+             } catch {
+               print("ERROR: Failed to delete - \(error)")
+               }
+          }
+          
+      case .delegate:
           return .none
-        
-
-      case let .numberFactResponse(fact):
-        state.numberFact = fact
-        return .none
       }
     }
   }

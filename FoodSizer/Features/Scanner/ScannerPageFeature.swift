@@ -25,6 +25,11 @@ struct ScannerPageFeature {
             case .camera(.delegate(.scanSavedToDb)):
                 state.path.append(.scanReview(ScanReviewFeature.State()))
                 return .none
+            case .path(.popFrom(id: _)):
+                state.camera.currentMode = .lidar //CameraMode.lidar
+                state.camera.savedMeshUrl = nil //clear old urls
+                state.camera.savedFaceUrl = nil
+                return .none
             case .camera:
                 return .none
             case .path:

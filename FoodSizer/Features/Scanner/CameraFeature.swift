@@ -49,7 +49,7 @@ var body: some Reducer<State, Action> {
             }
             else { //face scan
                 return .run { send in
-                    let fileUrl = try await faceClient.captureMesh(session)
+                    let fileUrl = try await faceClient.captureFace(session)
                     await send(.scanCompleted(fileUrl))
                 }
             }
