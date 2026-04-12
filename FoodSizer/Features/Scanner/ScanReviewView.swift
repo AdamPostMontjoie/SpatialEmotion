@@ -21,11 +21,13 @@ struct ScanReviewView: View {
             Text("Placeholder for 3D Face Rendering")
                 .foregroundColor(.gray)
             
-            // Your Counter Logic
             HStack(spacing: 30) {
                 Button("Delete Scan") { store.send(.deleteButtonTapped) }
-                    .font(.largeTitle)
-                    .frame(width: 60, height: 60)
+                    .font(.title3) 
+                    .fontWeight(.bold)
+                    .foregroundColor(.red)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
                     .background(Color.red.opacity(0.2))
                     .cornerRadius(12)
             }

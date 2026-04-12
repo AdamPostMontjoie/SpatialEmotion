@@ -34,7 +34,7 @@ struct ARViewContainer: UIViewRepresentable {
                 let hasFace = anchors.contains(where: { $0 is ARFaceAnchor })
                 let hasMesh = anchors.contains(where: { $0 is ARMeshAnchor })
                 
-                // task run on main actor when 
+                // task run on main actor when
                 Task { @MainActor [weak self] in
                     guard let self = self else { return }
                     
@@ -46,8 +46,7 @@ struct ARViewContainer: UIViewRepresentable {
                     } else {
                         isReady = false
                     }
-                    
-                    // The Bouncer Logic
+                    // calls on ready state changed only if state has changed
                     if isReady != self.lastReportedReadyState {
                         self.lastReportedReadyState = isReady
                         self.parent.onReadyStateChanged(isReady)
