@@ -26,19 +26,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		523625292F5C940D00219978 /* Capture AppUITests */ = {
+		52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Capture AppUITests";
-			sourceTree = "<group>";
-		};
-		523625382F5C948500219978 /* FoodSizerTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FoodSizerTests;
-			sourceTree = "<group>";
-		};
-		52E247CA2F5B248200AAFA83 /* FoodSizer */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FoodSizer;
+			path = SpatialEmotionTCA;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -65,9 +55,7 @@
 		52E247BF2F5B248200AAFA83 = {
 			isa = PBXGroup;
 			children = (
-				52E247CA2F5B248200AAFA83 /* FoodSizer */,
-				523625292F5C940D00219978 /* Capture AppUITests */,
-				523625382F5C948500219978 /* FoodSizerTests */,
+				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 				52E247C92F5B248200AAFA83 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,9 +85,6 @@
 			dependencies = (
 				5236253C2F5C948500219978 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				523625382F5C948500219978 /* FoodSizerTests */,
-			);
 			name = "Capture AppTests";
 			packageProductDependencies = (
 			);
@@ -120,7 +105,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				52E247CA2F5B248200AAFA83 /* FoodSizer */,
+				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 			);
 			name = "Capture App";
 			packageProductDependencies = (
@@ -149,7 +134,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 52E247C32F5B248200AAFA83 /* Build configuration list for PBXProject "FoodSizer" */;
+			buildConfigurationList = 52E247C32F5B248200AAFA83 /* Build configuration list for PBXProject "SpatialEmotion" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -460,7 +445,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52E247C32F5B248200AAFA83 /* Build configuration list for PBXProject "FoodSizer" */ = {
+		52E247C32F5B248200AAFA83 /* Build configuration list for PBXProject "SpatialEmotion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52E247D12F5B248600AAFA83 /* Debug */,
