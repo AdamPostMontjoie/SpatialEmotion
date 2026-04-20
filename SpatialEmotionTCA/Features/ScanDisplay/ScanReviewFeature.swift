@@ -67,7 +67,6 @@ struct ScanReviewFeature {
           case .deleteButtonTapped:
             return .run {[id = state.scanId, obj = state.objUrl, face = state.faceUrl] send in
                 do {
-                // try await deleteScanClient.delete(id: id, objUrl: obj, faceUrl: face)
                 try await databaseClient.deleteSession(id,obj,face)
                 print("SUCCESS: Deleted from SSD and SwiftData")
                     await send(.delegate(.scanRemoved(id)))
