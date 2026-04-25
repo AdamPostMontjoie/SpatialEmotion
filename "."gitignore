@@ -1,0 +1,12 @@
+//
+//  .gitignore
+//  SpatialEmotion
+//
+//  Created by Adam Post-Montjoie on 4/25/26.
+//
+
+# Ignore user-specific Xcode settings
+xcuserdata/
+
+# Ignore the project's personal state
+project.xcworkspace/xcuserdata/
