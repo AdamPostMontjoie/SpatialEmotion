@@ -15,13 +15,14 @@ struct CameraFeature {
      var currentMode:CameraMode = .lidar
      var savedMeshUrl:URL?
      var savedFaceUrl:URL?
+     var detectedEmotion:String?
      var isReadyToScan: Bool = false
     }
     
     enum Action {
         case scanButtonTapped
         case sessionCreated(UncheckedSession)
-        case scanCompleted(URL)
+        case scanCompleted(URL, String?)
         case saveToDataBase
         case onDisappear
         case onAppear
@@ -29,7 +30,7 @@ struct CameraFeature {
         case readyStateChanged(isReady:Bool)
         case setMode(CameraMode)
         enum Delegate {
-            case scanSavedToDb(scanId:UUID,objUrl:URL,faceUrl:URL)
+            case scanSavedToDb(scanId:UUID,objUrl:URL,faceUrl:URL, emotion:String)
         }
       }
     @Dependency(\.uuid) var uuid
@@ -67,17 +68,17 @@ var body: some Reducer<State, Action> {
             if state.savedMeshUrl == nil{ //lidar scan
                 return .run { send in
                     let fileUrl = try await lidarClient.captureMesh(session)
-                    await send(.scanCompleted(fileUrl))
+                    await send(.scanCompleted(fileUrl, nil))
                 }
             }
             else { //face scan
                 return .run { send in
-                    let fileUrl = try await faceClient.captureFace(session)
-                    await send(.scanCompleted(fileUrl))
+                    let (fileUrl, emotion)  = try await faceClient.captureFace(session)
+                    await send(.scanCompleted(fileUrl, emotion))
                 }
             }
             
-        case let .scanCompleted(url):
+        case let .scanCompleted(url,emotion ):
             if state.savedMeshUrl == nil {
                 state.savedMeshUrl = url
                 state.isReadyToScan = false
@@ -91,24 +92,26 @@ var body: some Reducer<State, Action> {
             }
             else {
                 state.savedFaceUrl = url
+                state.detectedEmotion = emotion
                 state.currentMode = .off
                 print("SUCCESS: Face Mesh saved to \(url)")
                 return .send(.saveToDataBase)
             }
         case .saveToDataBase:
-            guard let objUrl = state.savedMeshUrl, let faceUrl = state.savedFaceUrl
+            guard let objUrl = state.savedMeshUrl,
+                let faceUrl = state.savedFaceUrl,
+                let emotion = state.detectedEmotion
             else{
                 return .none
             }
             let newScanId = self.uuid()
             return .run { send in
                     do {
-                        try await databaseClient.saveSession(newScanId,objUrl, faceUrl)
+                        try await databaseClient.saveSession(newScanId,objUrl,faceUrl,emotion)
                         print("SUCCESS: Database saved.")
-                        
                         //trigger navigation to review screen
                        // await send(.delegate(.scanSuccessfullySaved))
-                        await send(.delegate(.scanSavedToDb(scanId: newScanId, objUrl: objUrl, faceUrl: faceUrl)))
+                        await send(.delegate(.scanSavedToDb(scanId: newScanId, objUrl: objUrl, faceUrl: faceUrl, emotion:emotion)))
                         
                     } catch {
                         print("ERROR: Failed to save to DB - \(error)")

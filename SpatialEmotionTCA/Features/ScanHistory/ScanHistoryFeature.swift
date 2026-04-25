@@ -23,6 +23,7 @@ struct ScanHistoryFeature {
         case path(StackAction<ScanReviewFeature.State,ScanReviewFeature.Action>)
         case deleteButtonTapped(id:PairedScan.ID)
         enum Alert:Equatable {
+            case scanUnavailable(id:PairedScan.ID)
             case confirmDeletion(id:PairedScan.ID)
         }
         
@@ -47,6 +48,10 @@ struct ScanHistoryFeature {
             case let .scansLoaded(scans):
                 state.scans = IdentifiedArray(uniqueElements: scans)
                 return .none
+            case let .path(.element(id: _, action: .delegate(.scanFailedToLoad(scanId)))):
+                            _ = state.path.popLast()
+                            state.destination = .alert(.scanUnavailable(id: scanId))
+                            return .none
             case let .path(.element(id: _, action: .delegate(.scanRemoved(scanId)))):
                 state.scans.remove(id: scanId)
                 return .none
@@ -55,10 +60,12 @@ struct ScanHistoryFeature {
                 return .none
             case .path:
                 return .none
-            case let .destination(.presented(.alert(.confirmDeletion(id: id)))):
+            case let .destination(.presented(.alert(.confirmDeletion(id: id)))),
+                let .destination(.presented(.alert(.scanUnavailable(id: id))))
+                :
                 guard let scanToDelete = state.scans[id:id] else {return .none}
-                
                 state.scans.remove(id: id)
+                
                 return .run { _ in
                     do {
                     try await databaseClient.deleteSession(scanToDelete.id,scanToDelete.objUrl,scanToDelete.faceUrl)
@@ -67,8 +74,7 @@ struct ScanHistoryFeature {
                        print("ERROR: Failed to delete - \(error)")
                        }
                   }
-                
-                
+
             case .destination:
                 return .none
             }
@@ -105,4 +111,13 @@ extension AlertState where Action == ScanHistoryFeature.Action.Alert {
       }
     }
   }
+    static func scanUnavailable(id: UUID) -> Self {
+      Self {
+        TextState("Sorry, no file can be found")
+      } actions: {
+          ButtonState(role: .destructive, action: .scanUnavailable(id: id)) {
+          TextState("Ok")
+        }
+      }
+    }
 }

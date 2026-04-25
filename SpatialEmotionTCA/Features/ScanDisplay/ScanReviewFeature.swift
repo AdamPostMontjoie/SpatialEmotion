@@ -15,7 +15,6 @@ import ComposableArchitecture
 import Foundation
 import SceneKit
 
-private enum CancelID { case load }
 
 @Reducer
 struct ScanReviewFeature {
@@ -24,18 +23,20 @@ struct ScanReviewFeature {
         var scanId: UUID
         var objUrl: URL
         var faceUrl: URL
+        var emotion:String
         var faceNode:SCNNode?
         var objNode:SCNNode?
+        
       }
     enum Action {
         case deleteButtonTapped
         case onAppear
-        case onDisappear
         case assembleFaceScene(SCNNode)
         case assembleObjectScene(SCNNode)
         case delegate(Delegate)
         enum Delegate{
             case scanRemoved(UUID)
+            case scanFailedToLoad(UUID)
         }
       }
     @Dependency(\.databaseClient) var databaseClient
@@ -45,25 +46,32 @@ struct ScanReviewFeature {
       switch action {
           case .onAppear:
               return .merge(
-                    .run { [url = state.faceUrl] send in
-                        let faceNode = try await sceneExtractionClient.parseNode(url)
-                        //we have to send this back to the main thread
-                        await send(.assembleFaceScene(faceNode))
+                .run { [url = state.faceUrl, id = state.scanId] send in
+                        do {
+                            let faceNode = try await sceneExtractionClient.parseNode(url)
+                            //we have to send this back to the main thread
+                            await send(.assembleFaceScene(faceNode))
+                        }
+                        catch {
+                            await send(.delegate(.scanFailedToLoad(id)))
+                        }
                     },
-                    .run { [url = state.objUrl] send in
-                        let objectNode = try await sceneExtractionClient.parseNode(url)
-                        await send(.assembleObjectScene(objectNode))
+                .run { [url = state.objUrl, id = state.scanId] send in
+                        do {
+                            let objectNode = try await sceneExtractionClient.parseNode(url)
+                            await send(.assembleObjectScene(objectNode))
+                        }
+                        catch {
+                            await send(.delegate(.scanFailedToLoad(id)))
+                        }
                     }
               )
-              .cancellable(id: CancelID.load)
       case let .assembleFaceScene(faceNode):
           state.faceNode = faceNode //saving the node allows it to be taken and used in sceneview
           return .none
       case let .assembleObjectScene(objectNode):
           state.objNode = objectNode
           return .none
-          case .onDisappear:
-            return .cancel(id: CancelID.load) //kill any cancelable background tasks if they're running
           case .deleteButtonTapped:
             return .run {[id = state.scanId, obj = state.objUrl, face = state.faceUrl] send in
                 do {

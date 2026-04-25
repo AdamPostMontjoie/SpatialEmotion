@@ -22,12 +22,13 @@ struct ScannerPageFeature {
         
         Reduce { state, action in
             switch action {
-            case let .camera(.delegate(.scanSavedToDb(id,obj,face))):
+            case let .camera(.delegate(.scanSavedToDb(id,obj,face,emotion))):
                 
                 let reviewState = ScanReviewFeature.State(
                     scanId:id,
                     objUrl:obj,
-                    faceUrl:face
+                    faceUrl:face,
+                    emotion:emotion
                 )
                 state.path.append(.scanReview(reviewState))
                 return .none
@@ -41,6 +42,7 @@ struct ScannerPageFeature {
                 state.camera.currentMode = .lidar //CameraMode.lidar
                 state.camera.savedMeshUrl = nil //clear old urls
                 state.camera.savedFaceUrl = nil
+                state.camera.detectedEmotion = nil
                 return .none
             case .camera:
                 return .none

@@ -21,6 +21,9 @@ extension SceneExtractionClient:DependencyKey {
             do {
                 let scene = try SCNScene(url: fileUrl, options: nil)
                 let node = scene.rootNode
+                if node.childNodes.isEmpty {
+                    throw SceneExtractionError.emptyOrCorruptedScene
+                }
                 return node
             } catch{
                 print("failed to extract node from storage")
@@ -28,6 +31,17 @@ extension SceneExtractionClient:DependencyKey {
             }
         }
     )
+}
+
+enum SceneExtractionError: Error, LocalizedError {
+    case emptyOrCorruptedScene
+    
+    var errorDescription: String? {
+        switch self {
+        case .emptyOrCorruptedScene:
+            return "The file was found, but it contained no 3D geometry."
+        }
+    }
 }
 
 extension DependencyValues {

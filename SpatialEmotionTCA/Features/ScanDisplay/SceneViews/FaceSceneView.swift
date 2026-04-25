@@ -38,7 +38,7 @@ struct FaceView : UIViewRepresentable {
         scene.rootNode.addChildNode(faceNode)
 
         // animate the 3d object
-        faceNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+      //  faceNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
 
         // retrieve the SCNView
         let scnView = SCNView()

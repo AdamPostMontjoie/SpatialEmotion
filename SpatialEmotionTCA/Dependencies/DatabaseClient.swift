@@ -12,7 +12,7 @@ import SwiftData
 
 struct DatabaseClient:Sendable {
     //added asynchrony, may cause issues 
-    var saveSession: @Sendable (_ scanID:UUID, _ objURL: URL, _ faceURL: URL) async throws -> Void
+    var saveSession: @Sendable (_ scanID:UUID, _ objURL: URL, _ faceURL: URL,_ emotion:String) async throws -> Void
     var deleteSession: @Sendable(_ scanId:UUID, _ objURL: URL, _ faceURL: URL) async throws -> Void
     var fetchAllSessions: @Sendable() throws -> [PairedScanSession]
 }
@@ -20,7 +20,7 @@ struct DatabaseClient:Sendable {
 //potentially need modelactor?
 extension DatabaseClient: DependencyKey {
     static let liveValue = Self(
-        saveSession: {scanId, objURL, faceURL in //save from camera feature
+        saveSession: {scanId, objURL, faceURL, emotion in //save from camera feature
             //Connect to the existing SQLite database file
             let container = try ModelContainer(for: PairedScanSession.self)
             
@@ -33,7 +33,8 @@ extension DatabaseClient: DependencyKey {
                 id:scanId,
                 name: "Scan \(Date().formatted(date: .abbreviated, time: .shortened))",
                 scanOneURL: objURL,
-                scanTwoURL: faceURL
+                scanTwoURL: faceURL,
+                emotion:emotion
             )
             
             context.insert(session)

@@ -44,9 +44,6 @@ struct ObjectView : UIViewRepresentable {
         // add the object node to scene
         scene.rootNode.addChildNode(objectNode)
 
-        // animate the 3d object
-        objectNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
-
         // retrieve the SCNView
         let scnView = SCNView()
         scnView.scene = scene
