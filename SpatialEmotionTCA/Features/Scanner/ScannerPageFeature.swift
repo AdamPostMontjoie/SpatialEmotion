@@ -36,6 +36,16 @@ struct ScannerPageFeature {
                 state.camera.currentMode = .lidar //CameraMode.lidar
                 state.camera.savedMeshUrl = nil //clear old urls
                 state.camera.savedFaceUrl = nil
+                //null nodes just in case lol
+                if let lastId = state.path.ids.last,
+                   case let .scanReview(reviewState) = state.path[id: lastId] {
+                    
+                    var modifiedState = reviewState
+                    modifiedState.faceNode = nil
+                    modifiedState.objNode = nil
+                    
+                    state.path[id: lastId] = .scanReview(modifiedState)
+                }
                 return .none
             case .path(.element(id:_, action: .scanReview(.delegate(.scanRemoved(_))))):
                 state.path.removeLast()

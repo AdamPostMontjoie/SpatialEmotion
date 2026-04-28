@@ -40,7 +40,15 @@ struct ObjectView : UIViewRepresentable {
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
-
+        objectNode.enumerateChildNodes { (child, _) in
+            if let geometry = child.geometry {
+                if geometry.firstMaterial == nil {
+                    geometry.firstMaterial = SCNMaterial()
+                }
+                geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
+                geometry.firstMaterial?.isDoubleSided = true
+            }
+        }
         // add the object node to scene
         scene.rootNode.addChildNode(objectNode)
 
@@ -49,17 +57,27 @@ struct ObjectView : UIViewRepresentable {
         scnView.scene = scene
         scnView.allowsCameraControl = true
 
-        // show statistics such as fps and timing information
-        scnView.showsStatistics = true
-
         // configure the view
-        scnView.backgroundColor = UIColor.black
+        scnView.backgroundColor = UIColor.white
         return scnView
     }
 
     func updateUIView(_ scnView: SCNView, context: Context) {
         
        
+    }
+    class Coordinator {
+        
+    }
+    func makeCoordinator() -> Coordinator {
+            return Coordinator()
+    }
+    static func dismantleUIView(_ uiView: SCNView, coordinator: Coordinator) {
+        uiView.scene?.rootNode.enumerateChildNodes { (node, _) in
+            node.removeFromParentNode()
+        }
+        uiView.scene = nil
+        uiView.removeFromSuperview()
     }
 }
 

@@ -24,7 +24,7 @@ extension SceneExtractionClient:DependencyKey {
                 if node.childNodes.isEmpty {
                     throw SceneExtractionError.emptyOrCorruptedScene
                 }
-                return node
+                return node.clone()
             } catch{
                 print("failed to extract node from storage")
                 throw error

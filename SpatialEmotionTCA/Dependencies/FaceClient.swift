@@ -12,15 +12,14 @@ import ComposableArchitecture
 import SceneKit
 
 struct FaceClient: Sendable {
-    var captureFace: @Sendable (_ session: UncheckedSession) async throws -> (URL,String)
+    var captureFace: @Sendable (_ payload: AnchorPayload) async throws -> (URL,String)
 }
 
 extension FaceClient: DependencyKey {
     static let liveValue = Self(
-        captureFace: {session in
-            guard let frame = session.rawValue.currentFrame,
-                let fa = frame.anchors.compactMap({ $0 as? ARFaceAnchor }).first,
-                let device = MTLCreateSystemDefaultDevice(),
+        captureFace: {payload in
+            guard let fa =  payload.anchors.compactMap({ $0 as? ARFaceAnchor }).first,
+            let device = MTLCreateSystemDefaultDevice(),
                   //pull geometry and create screen
                 let faceGeometry = ARSCNFaceGeometry(device: device)
                 else { //ArFrame

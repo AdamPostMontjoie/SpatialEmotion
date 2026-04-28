@@ -10,18 +10,17 @@ import Foundation
 @Reducer
 struct CameraFeature {
   @ObservableState
- struct State {
-     var session:UncheckedSession?
+    struct State:Equatable {
      var currentMode:CameraMode = .lidar
      var savedMeshUrl:URL?
      var savedFaceUrl:URL?
      var detectedEmotion:String?
      var isReadyToScan: Bool = false
+     var isSaving:Bool = false
     }
     
     enum Action {
         case scanButtonTapped
-        case sessionCreated(UncheckedSession)
         case scanCompleted(URL, String?)
         case saveToDataBase
         case onDisappear
@@ -40,10 +39,6 @@ struct CameraFeature {
 var body: some Reducer<State, Action> {
     Reduce { state, action in
         switch action {
-        case let .sessionCreated(sesh):
-            state.session = sesh
-            print("session created")
-            return .none
         case let .readyStateChanged(isReady):
             state.isReadyToScan = isReady
             return .none
@@ -57,36 +52,27 @@ var body: some Reducer<State, Action> {
             return .none
         case .onDisappear:
             state.currentMode = .off
+            state.isReadyToScan = false
             return .none
         case let .setMode(mode):
             state.currentMode = mode
             return .none
         case .scanButtonTapped:
             print("button tapped")
-            guard let session = state.session else { return .none }
-            print("creating mesh")
-            if state.savedMeshUrl == nil{ //lidar scan
-                return .run { send in
-                    let fileUrl = try await lidarClient.captureMesh(session)
-                    await send(.scanCompleted(fileUrl, nil))
-                }
-            }
-            else { //face scan
-                return .run { send in
-                    let (fileUrl, emotion)  = try await faceClient.captureFace(session)
-                    await send(.scanCompleted(fileUrl, emotion))
-                }
-            }
+            state.isSaving = true
+            return .none
             
-        case let .scanCompleted(url,emotion ):
+        case let .scanCompleted(url,emotion):
+            state.isSaving = false
             if state.savedMeshUrl == nil {
                 state.savedMeshUrl = url
                 state.isReadyToScan = false
+                print("SUCCESS: Face Mesh saved to \(url)")
                 return .run { send in
                     //state is mutated asynchronously to give the arview time to turn everything off
                     //before turning it back on again
                     await send(.setMode(.off))
-                    try await Task.sleep(for: .milliseconds(300))
+                    try await Task.sleep(for: .milliseconds(30))
                     await send(.setMode(.face))
                 }
             }
@@ -109,8 +95,6 @@ var body: some Reducer<State, Action> {
                     do {
                         try await databaseClient.saveSession(newScanId,objUrl,faceUrl,emotion)
                         print("SUCCESS: Database saved.")
-                        //trigger navigation to review screen
-                       // await send(.delegate(.scanSuccessfullySaved))
                         await send(.delegate(.scanSavedToDb(scanId: newScanId, objUrl: objUrl, faceUrl: faceUrl, emotion:emotion)))
                         
                     } catch {
@@ -122,17 +106,6 @@ var body: some Reducer<State, Action> {
       }
     }
   }
-}
-//this is operator overloading, in Swift == is just a func
-//cannot compare Arsession as it is a reference type and doesn't support it
-//so overwriting == to make it equatable for tca
-extension CameraFeature.State: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.savedMeshUrl == rhs.savedMeshUrl &&
-        lhs.savedFaceUrl == rhs.savedFaceUrl &&
-        lhs.currentMode == rhs.currentMode
-        
-    }
 }
 
 enum CameraMode:Equatable {
