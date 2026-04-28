@@ -47,8 +47,11 @@ struct ScanHistoryView: View {
                     }
                 }
             }
-            .navigationTitle("History")
+            .navigationTitle("Scan History")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarVisibility(.visible, for: .tabBar)
             // Alerts
+            
             .alert($store.scope(state: \.destination?.alert, action: \.destination.alert))
             .onAppear {
                 store.send(.onAppear)

@@ -10,7 +10,7 @@ import Foundation
 @Reducer
 struct CameraFeature {
   @ObservableState
- struct State {
+    struct State:Equatable {
      var currentMode:CameraMode = .lidar
      var savedMeshUrl:URL?
      var savedFaceUrl:URL?

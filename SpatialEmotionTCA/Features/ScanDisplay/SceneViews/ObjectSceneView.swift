@@ -56,9 +56,6 @@ struct ObjectView : UIViewRepresentable {
         scnView.scene = scene
         scnView.allowsCameraControl = true
 
-        // show statistics such as fps and timing information
-        scnView.showsStatistics = true
-
         // configure the view
         scnView.backgroundColor = UIColor.white
         return scnView

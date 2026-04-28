@@ -108,7 +108,7 @@ struct ScanHistoryFeature {
                     return .run { send in
                         //destroy corrupted urls
                         try? await databaseClient.deleteSession(corruptedScan.id, corruptedScan.objURL, corruptedScan.faceURL)
-                        try await Task.sleep(for: .milliseconds(300))
+                        try await Task.sleep(for: .milliseconds(450))
                         await send(.unavailableAlert)
                     }
 
@@ -116,7 +116,7 @@ struct ScanHistoryFeature {
                     state.scans.remove(id: scanId)
                     return .run { send in
                         //sleep
-                            try await Task.sleep(for: .milliseconds(300))
+                            try await Task.sleep(for: .milliseconds(450))
                             await send(.successAlert)
                         }
 
