@@ -40,7 +40,14 @@ struct ObjectView : UIViewRepresentable {
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
-
+        objectNode.enumerateChildNodes { (child, _) in
+            if let geometry = child.geometry {
+                if geometry.firstMaterial == nil {
+                    geometry.firstMaterial = SCNMaterial()
+                }
+                geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
+            }
+        }
         // add the object node to scene
         scene.rootNode.addChildNode(objectNode)
 
@@ -53,7 +60,7 @@ struct ObjectView : UIViewRepresentable {
         scnView.showsStatistics = true
 
         // configure the view
-        scnView.backgroundColor = UIColor.black
+        scnView.backgroundColor = UIColor.white
         return scnView
     }
 

@@ -13,22 +13,26 @@ struct CameraView: View {
     
     var body: some View {
         ZStack {
-            // 1. The Camera (Only active when not .off)
+            //we can let the arviewcontainer deal with the face and lidar dependencies
+            //when it is ready, it will store.send url and emotion to the camerafeature
+            //will make testability of face and lidar client difficult/impossible
             if store.currentMode != .off {
                 ARViewContainer(
-                    onSessionCreated: { session in
-                        store.send(.sessionCreated(session))
-                    },
+                    saveSessionNow:store.isSaving,
                     currentMode: store.currentMode,
+                    onSessionSaved: { url, emotion in
+                        store.send(.scanCompleted(url, emotion))
+                    },
+                    
                     onReadyStateChanged:{ isReady in
                         store.send(.readyStateChanged(isReady:isReady))
                     }
+                    
                 )
                 .ignoresSafeArea()
                 .transition(.opacity) // Fade out instead of snapping
             }
             
-            // 2. The Premium Transition Mask
             if store.currentMode == .off {
                 ZStack {
                     // iOS Frosted Glass Effect
@@ -44,17 +48,16 @@ struct CameraView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                .transition(.opacity) // Fade in
+                .transition(.opacity)
             }
-            
-            // 3. The Scan Button
+
             VStack {
                 Spacer()
                 
                 Button {
                     store.send(.scanButtonTapped)
                 } label: {
-                    Text(store.currentMode == .lidar ? "Scan Object" : "Scan Face")
+                    Text(store.currentMode == .lidar ? "Capture Surroundings" : "Capture Emotion")
                         .font(.headline)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -68,7 +71,7 @@ struct CameraView: View {
                 .padding(.bottom, 40)
             }
         }
-        // 4. The magic line: Tells the ZStack to crossfade changes smoothly
+        //  The magic line: Tells the ZStack to crossfade changes smoothly
         .animation(.easeInOut(duration: 0.3), value: store.currentMode)
         .onAppear {
             store.send(.onAppear)
