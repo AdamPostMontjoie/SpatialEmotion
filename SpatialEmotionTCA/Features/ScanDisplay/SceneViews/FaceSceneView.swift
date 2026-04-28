@@ -34,11 +34,15 @@ struct FaceView : UIViewRepresentable {
         ambientLightNode.light!.type = .ambient
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
+        
+        
         faceNode.enumerateChildNodes { (child, _) in
             if let geometry = child.geometry {
                 if geometry.firstMaterial == nil {
                     geometry.firstMaterial = SCNMaterial()
+                    
                 }
+                geometry.firstMaterial?.isDoubleSided = true
                 geometry.firstMaterial?.diffuse.contents = faceColor
             }
         }

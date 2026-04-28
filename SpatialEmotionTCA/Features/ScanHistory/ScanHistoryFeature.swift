@@ -160,7 +160,7 @@ extension AlertState where Action == ScanHistoryFeature.Action.Alert {
       Self {
         TextState("Sorry, no file can be found")
       } actions: {
-          ButtonState(role: .destructive, action: .scanUnavailable) {
+          ButtonState( action: .scanUnavailable) {
           TextState("Ok")
         }
       }
