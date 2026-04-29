@@ -144,6 +144,17 @@ class EmotionClassification {
         }
         return emotionName
     }
+    func emotionToEmoji(_ emotion:String) -> String{
+        switch emotion {
+            case "happiness": return "😀"
+            case "sadness": return "😢"
+            case "anger": return "😡"
+            case "suprise": return "😲"
+            case "IShowSpeed": return "🐶"
+            case "neutrality": return "😐"
+            default: return "❓"
+        }
+    }
     private func printBlendShapes(for face: ARFaceAnchor) {
             let sortedShapes = face.blendShapes.sorted { $0.key.rawValue < $1.key.rawValue }
             print("--- ARFaceAnchor BlendShapes ---")

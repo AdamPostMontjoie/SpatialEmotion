@@ -11,14 +11,14 @@ import ComposableArchitecture
 import simd
 
 struct LiDARClient: Sendable {
-    var captureMesh: @Sendable (_ payload: AnchorPayload) async throws -> URL
+    var captureMesh: @Sendable (_ payload: [ARAnchor]) async throws -> URL
 }
 //this may not be properly saving meshes
 extension LiDARClient: DependencyKey {
     static let liveValue = Self(
         captureMesh: {payload in
   
-            let meshAnchors = payload.anchors.compactMap { $0 as? ARMeshAnchor }
+            let meshAnchors = payload.compactMap { $0 as? ARMeshAnchor }
            
             let scene = SCNScene()
             

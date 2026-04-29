@@ -20,6 +20,7 @@ struct ARViewContainer: UIViewRepresentable {
 
     @Dependency(\.lidarClient) var lidarClient
     @Dependency(\.faceClient) var faceClient
+    @Binding var liveEmotion:String?
     
     @MainActor
         class Coordinator: NSObject, ARSessionDelegate {
@@ -27,6 +28,7 @@ struct ARViewContainer: UIViewRepresentable {
             var lastMode: CameraMode? = nil
             var lastReportedReadyState: Bool = false
             var isExtracting: Bool = false
+            var lastDetectedEmotion:String?
             
             init(parent: ARViewContainer) {
                 self.parent = parent
@@ -36,9 +38,18 @@ struct ARViewContainer: UIViewRepresentable {
             nonisolated func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
                 
                 // non-sendable hardware data evaluated immediately on the background thread
-                let hasFace = anchors.contains(where: { $0 is ARFaceAnchor })
+                let faceAnchor = anchors.compactMap({ $0 as? ARFaceAnchor }).first
+                let hasFace = (faceAnchor != nil)
                 let hasMesh = anchors.contains(where: { $0 is ARMeshAnchor })
+                var detectedEmotionString:String?
                 
+                //check emotion
+                let emote = EmotionClassification()
+                
+                if let anchor = faceAnchor{
+                  detectedEmotionString = emote.detectEmotion(face: anchor)
+                    
+                }
                 
                 // task run on main actor when
                 Task { @MainActor [weak self] in
@@ -58,8 +69,19 @@ struct ARViewContainer: UIViewRepresentable {
                         self.lastReportedReadyState = isReady
                         self.parent.onReadyStateChanged(isReady)
                     }
+                    if self.parent.currentMode == .face {
+                        if detectedEmotionString != self.lastDetectedEmotion {
+                            self.lastDetectedEmotion = detectedEmotionString
+                            self.parent.liveEmotion = detectedEmotionString
+                        }
+                    } else if self.lastDetectedEmotion != nil {
+                        // Clear it out if we switch to LiDAR or Off
+                        self.lastDetectedEmotion = nil
+                        self.parent.liveEmotion = nil
+                    }
+                        
+                    }
                 }
-            }
         }
     
     func makeCoordinator() -> Coordinator {
@@ -78,7 +100,7 @@ struct ARViewContainer: UIViewRepresentable {
         if self.saveSessionNow && !context.coordinator.isExtracting {
             context.coordinator.isExtracting = true
             if let frame = uiView.session.currentFrame {
-                let payload = AnchorPayload(anchors: frame.anchors)
+                let payload = frame.anchors
                 let mode = self.currentMode
                     Task {
                         do {
