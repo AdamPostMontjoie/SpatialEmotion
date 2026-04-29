@@ -27,25 +27,13 @@ struct CameraView: View {
                     
                     onReadyStateChanged:{ isReady in
                         store.send(.readyStateChanged(isReady:isReady))
-                    },
-                    liveEmotion:$liveEmotion
+                    }
                     
                 )
                 .ignoresSafeArea()
                 .transition(.opacity)
                 
             }
-            if store.currentMode == .face, let emotion = liveEmotion {
-                            VStack {
-                                Text(emotionClass.emotionToEmoji(emotion))
-                                    .font(.system(size: 80))
-                                    .padding(.top, 60) 
-                                    .shadow(radius: 10)
-                                Spacer()
-                            }
-                            .transition(.scale.combined(with: .opacity))
-                            .animation(.spring(), value: liveEmotion)
-                        }
             
             if store.currentMode == .off {
                 ZStack {
