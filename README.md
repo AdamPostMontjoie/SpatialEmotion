@@ -5,7 +5,8 @@ An iOS application that captures the moment in 3D, and how it made you feel, bui
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-(gif here)
+https://github.com/user-attachments/assets/ee99a1f0-35c5-48ba-8f7b-27078b14be66
+
 
 Spatial Emotion is an experimental iOS application that uses an iPhone's LiDAR and TrueDepth scanners to map a user's physical location and the shape and emotion of their face in that moment.
 
