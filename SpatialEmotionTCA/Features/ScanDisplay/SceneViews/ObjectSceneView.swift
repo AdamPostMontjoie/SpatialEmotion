@@ -46,7 +46,6 @@ struct ObjectView : UIViewRepresentable {
                     geometry.firstMaterial = SCNMaterial()
                 }
                 geometry.firstMaterial?.diffuse.contents = UIColor.lightGray
-                geometry.firstMaterial?.isDoubleSided = true
             }
         }
         // add the object node to scene

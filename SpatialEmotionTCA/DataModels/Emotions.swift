@@ -178,7 +178,7 @@ struct SillinessEmotion: Emotion {
 class EmotionClassification {
     func detectEmotion(face:ARFaceAnchor) -> String {
         let emotions:[Emotion] = [NeutralEmotion(), HappyEmotion(), SadEmotion(), AngryEmotion(), SpeedEmotion(), SuprisedEmotion(), ConfidenceEmotion(), SillinessEmotion()]
-        printBlendShapes(for: face)
+      //  printBlendShapes(for: face)
         let validEmotions = emotions.map{e in
             (name:e.name, score:e.confidenceScore(for: face), threshold:e.threshold)
         }.filter{

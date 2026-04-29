@@ -91,8 +91,10 @@ func EmotionalColor(_ emotion:String) -> UIColor{
         return .systemGreen
     case "neutrality":
         return .systemGray
-    case "unknown":
+    case "silliness":
         return .systemMint
+    case "confidence":
+        return .systemBrown
     case "suprise":
         return .systemPink
     default:

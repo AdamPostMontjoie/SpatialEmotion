@@ -67,7 +67,7 @@ var body: some Reducer<State, Action> {
             if state.savedMeshUrl == nil {
                 state.savedMeshUrl = url
                 state.isReadyToScan = false
-                print("SUCCESS: Face Mesh saved to \(url)")
+                print("SUCCESS: LiDAR Mesh saved to \(url)")
                 return .run { send in
                     //state is mutated asynchronously to give the arview time to turn everything off
                     //before turning it back on again
@@ -88,8 +88,13 @@ var body: some Reducer<State, Action> {
                 let faceUrl = state.savedFaceUrl,
                 let emotion = state.detectedEmotion
             else{
+                print("ERROR: Scan bug, incomplete for saving")
                 return .none
             }
+            state.savedMeshUrl = nil
+            state.savedFaceUrl = nil
+            state.detectedEmotion = nil
+            
             let newScanId = self.uuid()
             return .run { send in
                     do {

@@ -41,10 +41,13 @@ struct ARViewContainer: UIViewRepresentable {
         // nonisolated so it can run on the background hardware thread safely
         nonisolated func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
             
-            // non-sendable hardware data evaluated immediately on the background thread
+            // non-sendable hardware data evaluated immediately on the background
+            let allTrackedAnchors = session.currentFrame?.anchors ?? []
+            
             let faceAnchor = anchors.compactMap({ $0 as? ARFaceAnchor }).first
-            let hasFace = (faceAnchor != nil)
-            let hasMesh = anchors.contains(where: { $0 is ARMeshAnchor })
+            
+            let hasFace = allTrackedAnchors.contains(where: { $0 is ARFaceAnchor })
+            let hasMesh = allTrackedAnchors.contains(where: { $0 is ARMeshAnchor })
             var detectedEmotionString:String?
             
             //check emotion
@@ -72,6 +75,7 @@ struct ARViewContainer: UIViewRepresentable {
                     self.lastReportedReadyState = isReady
                     self.parent.onReadyStateChanged(isReady)
                 }
+                
                 if self.parent.currentMode == .face {
                     // only update emoji if needed
                     if let newEmotion = detectedEmotionString, newEmotion != self.lastDetectedEmotion {
@@ -195,6 +199,8 @@ struct ARViewContainer: UIViewRepresentable {
         //the mode and session switching based on tca state
         guard self.currentMode != context.coordinator.lastMode else { return }
         context.coordinator.lastMode = self.currentMode
+        context.coordinator.lastReportedReadyState = false
+        
         switch self.currentMode{
             case .lidar:
             let config = ARWorldTrackingConfiguration()
