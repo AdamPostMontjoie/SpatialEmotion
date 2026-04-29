@@ -10,7 +10,8 @@ import ComposableArchitecture
 
 struct CameraView: View {
     @Bindable var store: StoreOf<CameraFeature>
-    
+    @State var liveEmotion:String?
+    var emotionClass:EmotionClassification = EmotionClassification()
     var body: some View {
         ZStack {
             //we can let the arviewcontainer deal with the face and lidar dependencies
@@ -30,7 +31,8 @@ struct CameraView: View {
                     
                 )
                 .ignoresSafeArea()
-                .transition(.opacity) // Fade out instead of snapping
+                .transition(.opacity)
+                
             }
             
             if store.currentMode == .off {
@@ -81,3 +83,5 @@ struct CameraView: View {
         }
     }
 }
+
+

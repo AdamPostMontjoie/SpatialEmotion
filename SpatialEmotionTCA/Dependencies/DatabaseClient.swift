@@ -26,6 +26,7 @@ extension DatabaseClient: DependencyKey {
             
             // Create a fresh context for this specific background task
             let context = ModelContext(container)
+            let emoji = EmotionClassification().emotionToEmoji(emotion)
             
             // Initialize data model
             let now = Date.now
@@ -34,7 +35,8 @@ extension DatabaseClient: DependencyKey {
                 name: "Scan \(Date().formatted(date: .abbreviated, time: .shortened))",
                 objURL: objURL,
                 faceURL: faceURL,
-                emotion:emotion
+                emotion:emotion,
+                emoji:emoji
             )
             
             context.insert(session)

@@ -28,11 +28,14 @@ struct NeutralEmotion: Emotion {
         name = "neutrality"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
+        //penalized emotions
         let leftSmile = face.blendShapes[.mouthSmileLeft]?.doubleValue ?? 0.0
         let rightSmile = face.blendShapes[.mouthSmileRight]?.doubleValue ?? 0.0
         let browDown = face.blendShapes[.browDownLeft]?.doubleValue ?? 0.0
         let pucker = face.blendShapes[.mouthPucker]?.doubleValue ?? 0.0
-        let mostExpressive = max(leftSmile, rightSmile, browDown, pucker)
+        let tongue = face.blendShapes[.tongueOut]?.doubleValue ?? 0.0
+        
+        let mostExpressive = max(leftSmile, rightSmile, browDown, pucker, tongue)
         
         let leftEye = face.blendShapes[.eyeWideLeft]?.doubleValue ?? 0.0
         let rightEye = face.blendShapes[.eyeWideRight]?.doubleValue ?? 0.0
@@ -129,10 +132,52 @@ struct SpeedEmotion: Emotion {
         
     }
 }
+struct ConfidenceEmotion: Emotion {
+    var name: String
+    init(){
+        name = "confidence"
+    }
+    func confidenceScore(for face: ARFaceAnchor) -> Double {
+        let leftSmile = face.blendShapes[.mouthSmileLeft]?.doubleValue ?? 0.0
+        let rightSmile = face.blendShapes[.mouthSmileRight]?.doubleValue ?? 0.0
+        
+        let leftFrown = face.blendShapes[.mouthFrownLeft]?.doubleValue ?? 0.0
+        let rightFrown = face.blendShapes[.mouthFrownRight]?.doubleValue ?? 0.0
+        
+        let leftSmirk = leftSmile - rightSmile - rightFrown
+        let rightSmirk = rightSmile - leftSmile - leftFrown
+        
+        let maxAsymmetry = max(leftSmirk, rightSmirk)
+        
+        let squintLeft = face.blendShapes[.eyeSquintLeft]?.doubleValue ?? 0.0
+        let squintRight = face.blendShapes[.eyeSquintRight]?.doubleValue ?? 0.0
+        let squintAvg = (squintLeft + squintRight) / 2.0
+        
+        return max(0.0, (maxAsymmetry * 0.8) + (squintAvg * 0.2))
+    }
+}
+
+struct SillinessEmotion: Emotion {
+    var name: String
+    init(){
+        name = "silliness"
+    }
+    func confidenceScore(for face: ARFaceAnchor) -> Double {
+        let tongue = face.blendShapes[.tongueOut]?.doubleValue ?? 0.0
+        
+        // Adding a slight bonus if they are also winking (asymmetrical blinking)
+        let blinkLeft = face.blendShapes[.eyeBlinkLeft]?.doubleValue ?? 0.0
+        let blinkRight = face.blendShapes[.eyeBlinkRight]?.doubleValue ?? 0.0
+        let winkAsymmetry = abs(blinkLeft - blinkRight)
+        
+        // Tongue drives the score, wink pushes it higher
+        return min(1.0, tongue + (winkAsymmetry * 0.3))
+    }
+}
 
 class EmotionClassification {
     func detectEmotion(face:ARFaceAnchor) -> String {
-        let emotions:[Emotion] = [NeutralEmotion(), HappyEmotion(), SadEmotion(), AngryEmotion(), SpeedEmotion(), SuprisedEmotion()]
+        let emotions:[Emotion] = [NeutralEmotion(), HappyEmotion(), SadEmotion(), AngryEmotion(), SpeedEmotion(), SuprisedEmotion(), ConfidenceEmotion(), SillinessEmotion()]
         printBlendShapes(for: face)
         let validEmotions = emotions.map{e in
             (name:e.name, score:e.confidenceScore(for: face), threshold:e.threshold)
@@ -143,6 +188,19 @@ class EmotionClassification {
             return "unknown"
         }
         return emotionName
+    }
+    func emotionToEmoji(_ emotion:String) -> String{
+        switch emotion {
+            case "happiness": return "😀"
+            case "sadness": return "😢"
+            case "anger": return "😡"
+            case "suprise": return "😲"
+            case "IShowSpeed": return "🤭"
+            case "neutrality": return "😐"
+            case "confidence": return "😏"
+            case "silliness":return "😛"
+            default: return "❓"
+        }
     }
     private func printBlendShapes(for face: ARFaceAnchor) {
             let sortedShapes = face.blendShapes.sorted { $0.key.rawValue < $1.key.rawValue }

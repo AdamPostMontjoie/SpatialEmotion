@@ -19,14 +19,13 @@ struct ScanHistoryView: View {
                         NavigationLink(state: ScanReviewFeature.State(scanId: scan.id,
                                                                       objURL: scan.objURL,
                                                                       faceURL: scan.faceURL, emotion:scan.emotion))
-        
                         {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(scan.name)
+                                Text("\(scan.name)  \(scan.emoji)")
                                     .font(.headline)
                                 
                                 // first 8 uuid characters
-                                Text("ID: \(scan.id.uuidString.prefix(8))")
+                                Text("ID: \(scan.id.uuidString.prefix(6))")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
