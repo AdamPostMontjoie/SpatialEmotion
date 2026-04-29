@@ -19,14 +19,16 @@ final class PairedScanSession {
     var faceURL: URL
     
     var emotion:String
+    var emoji:String?
     
     
-    init(id: UUID = UUID(), name: String, timestamp: Date = Date(), objURL: URL, faceURL: URL, emotion:String) {
+    init(id: UUID = UUID(), name: String, timestamp: Date = Date(), objURL: URL, faceURL: URL, emotion:String, emoji:String) {
         self.id = id
         self.name = name
         self.timestamp = timestamp
         self.objURL = objURL
         self.faceURL = faceURL
         self.emotion = emotion
+        self.emoji = emoji
     }
 }

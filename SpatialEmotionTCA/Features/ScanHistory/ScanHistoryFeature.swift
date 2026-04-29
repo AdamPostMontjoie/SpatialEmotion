@@ -43,7 +43,7 @@ struct ScanHistoryFeature {
                         do {
                             let sessions = try databaseClient.fetchAllSessions()
                             let pastScans = sessions.map {
-                                PairedScan(id: $0.id, name: $0.name, timestamp: $0.timestamp, objURL: $0.objURL, faceURL: $0.faceURL, emotion: $0.emotion)
+                                PairedScan(id: $0.id, name: $0.name, timestamp: $0.timestamp, objURL: $0.objURL, faceURL: $0.faceURL, emotion: $0.emotion, emoji: $0.emoji ?? "❓")
                             }
                             await send(.scansLoaded(pastScans))
                         } catch {
@@ -138,6 +138,7 @@ struct PairedScan:Equatable, Identifiable {
     let objURL:URL
     let faceURL:URL
     let emotion:String
+    let emoji:String
 }
 
 extension ScanHistoryFeature {

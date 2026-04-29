@@ -24,7 +24,6 @@ extension LiDARClient: DependencyKey {
             
             for ma in meshAnchors {
                     let geometry = ma.geometry
-                   
                     let transform = ma.transform
                     let vertices = geometry.vertices
                     let vertexPointer = vertices.buffer.contents()

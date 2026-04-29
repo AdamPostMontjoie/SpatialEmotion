@@ -11,6 +11,7 @@ import ComposableArchitecture
 struct CameraView: View {
     @Bindable var store: StoreOf<CameraFeature>
     @State var liveEmotion:String?
+    var emotionClass:EmotionClassification = EmotionClassification()
     var body: some View {
         ZStack {
             //we can let the arviewcontainer deal with the face and lidar dependencies
@@ -36,9 +37,9 @@ struct CameraView: View {
             }
             if store.currentMode == .face, let emotion = liveEmotion {
                             VStack {
-                                Text(emotionToEmoji(emotion))
+                                Text(emotionClass.emotionToEmoji(emotion))
                                     .font(.system(size: 80))
-                                    .padding(.top, 60) // Push it down from the notch
+                                    .padding(.top, 60) 
                                     .shadow(radius: 10)
                                 Spacer()
                             }
