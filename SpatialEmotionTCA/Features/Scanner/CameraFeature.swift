@@ -6,6 +6,7 @@
 //
 import ComposableArchitecture
 import Foundation
+import ARKit
 
 @Reducer
 struct CameraFeature {
@@ -28,6 +29,7 @@ struct CameraFeature {
         case delegate(Delegate)
         case readyStateChanged(isReady:Bool)
         case setMode(CameraMode)
+        case captureAnchors([ARAnchor])
         enum Delegate {
             case scanSavedToDb(scanId:UUID,objUrl:URL,faceUrl:URL, emotion:String)
         }
@@ -59,9 +61,25 @@ var body: some Reducer<State, Action> {
             return .none
         case .scanButtonTapped:
             print("button tapped")
-            state.isSaving = true
+            state.isSaving = true //hey, save the anchors
             return .none
+        case let .captureAnchors(anchors):
+            state.isSaving = false // Instantly reset the UI flag
+            let mode = state.currentMode
             
+            return .run { send in
+                do {
+                    if mode == .lidar {
+                        let url = try await lidarClient.captureMesh(anchors)
+                        await send(.scanCompleted(url, nil))
+                    } else if mode == .face {
+                        let (url, emotion) = try await faceClient.captureFace(anchors)
+                        await send(.scanCompleted(url, emotion))
+                    }
+                } catch {
+                    print("ERROR: Hardware extraction failed - \(error)")
+                }
+            }
         case let .scanCompleted(url,emotion):
             state.isSaving = false
             if state.savedMeshUrl == nil {

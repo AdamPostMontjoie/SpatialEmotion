@@ -21,10 +21,9 @@ struct CameraView: View {
                 ARViewContainer(
                     saveSessionNow:store.isSaving,
                     currentMode: store.currentMode,
-                    onSessionSaved: { url, emotion in
-                        store.send(.scanCompleted(url, emotion))
+                    onCaptureAnchors: { anchies in
+                        store.send(.captureAnchors(anchies))
                     },
-                    
                     onReadyStateChanged:{ isReady in
                         store.send(.readyStateChanged(isReady:isReady))
                     }
