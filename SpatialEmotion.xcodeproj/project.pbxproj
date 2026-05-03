@@ -22,12 +22,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		523337EC2FA788C0001C2F03 /* Capture App.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Capture App.xctestplan"; sourceTree = "<group>"; };
 		523625372F5C948500219978 /* Capture AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Capture AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52861E6F2F9D083900C9E73D /* "."gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = "\".\"gitignore"; sourceTree = "<group>"; };
 		52E247C82F5B248200AAFA83 /* Capture App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Capture App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CameraFeatureTests.swift,
+			);
+			target = 52E247C72F5B248200AAFA83 /* Capture App */;
+		};
+		523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture AppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CameraFeatureTests.swift,
+			);
+			target = 523625362F5C948500219978 /* Capture AppTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		523337E52FA77B94001C2F03 /* SpatialEmotionTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture App" target */,
+				523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture AppTests" target */,
+			);
+			path = SpatialEmotionTests;
+			sourceTree = "<group>";
+		};
 		52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SpatialEmotionTCA;
@@ -57,6 +84,8 @@
 		52E247BF2F5B248200AAFA83 = {
 			isa = PBXGroup;
 			children = (
+				523337EC2FA788C0001C2F03 /* Capture App.xctestplan */,
+				523337E52FA77B94001C2F03 /* SpatialEmotionTests */,
 				52861E6F2F9D083900C9E73D /* "."gitignore */,
 				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 				52E247C92F5B248200AAFA83 /* Products */,
@@ -108,6 +137,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				523337E52FA77B94001C2F03 /* SpatialEmotionTests */,
 				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 			);
 			name = "Capture App";
@@ -208,8 +238,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3H2TK6P8A9;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Adam.Capture-AppTests";
@@ -218,7 +250,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Capture App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Capture App";
 			};
@@ -228,8 +260,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3H2TK6P8A9;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Adam.Capture-AppTests";
@@ -238,7 +272,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Capture App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Capture App";
 			};

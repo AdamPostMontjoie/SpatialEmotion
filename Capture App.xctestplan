@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "DE0779D9-D050-485B-ADFF-29DEAC86C4D3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:SpatialEmotion.xcodeproj",
+      "identifier" : "52E247C72F5B248200AAFA83",
+      "name" : "Capture App"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:SpatialEmotion.xcodeproj",
+        "identifier" : "523625362F5C948500219978",
+        "name" : "Capture AppTests"
+      }
+    }
+  ],
+  "version" : 1
+}

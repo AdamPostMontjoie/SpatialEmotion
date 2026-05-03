@@ -8,17 +8,13 @@
 import SwiftUI
 import ARKit
 import RealityKit
-import Dependencies
 
 @MainActor
 struct ARViewContainer: UIViewRepresentable {
     var saveSessionNow:Bool
     var currentMode:CameraMode
-    var onSessionSaved: (URL, String?) -> Void
+    var onCaptureAnchors: ([ARAnchor]) -> Void
     var onReadyStateChanged: (Bool) -> Void
-
-    @Dependency(\.lidarClient) var lidarClient
-    @Dependency(\.faceClient) var faceClient
     
     @MainActor
     class Coordinator: NSObject, ARSessionDelegate {
@@ -27,7 +23,7 @@ struct ARViewContainer: UIViewRepresentable {
         
         var lastMode: CameraMode? = nil
         var lastReportedReadyState: Bool = false
-        var isExtracting: Bool = false
+        var hasFiredCapture: Bool = false
         var lastDetectedEmotion:String?
         
         // RealityKit Trackers
@@ -162,59 +158,39 @@ struct ARViewContainer: UIViewRepresentable {
         context.coordinator.parent = self
         
         //the session saving that triggers based on tca state
-        if self.saveSessionNow && !context.coordinator.isExtracting {
-            context.coordinator.isExtracting = true
-            if let frame = uiView.session.currentFrame {
-                let payload = frame.anchors
-                let mode = self.currentMode
-                    Task {
-                        do {
-                            if mode == .lidar {
-                                let url = try await self.lidarClient.captureMesh(payload)
-                                    await MainActor.run {
-                                        self.onSessionSaved(url, nil)
-                                        //we wait until the next updateuiview to set the isExtracting lock to false
-                                        //when we set it immediately after, it was running updateuiview before tca reducer could set is saving to false
-                                        //so savesessionnow listener was still true and it saved twice as isExtracting was now false
-                                    }
-                            } else if mode == .face {
-                                let (url,emotion) = try await self.faceClient.captureFace(payload)
-                                await MainActor.run {
-                                    self.onSessionSaved(url, emotion)
-                                }
-                            }
-                        } catch {
-                            await MainActor.run {
-                                context.coordinator.isExtracting = false
-                            }
-                        }
+        if self.saveSessionNow && !context.coordinator.hasFiredCapture {
+                    context.coordinator.hasFiredCapture = true
+                    let anchors = uiView.session.currentFrame?.anchors ?? []
+                    
+                    // Dispatch asynchronously to prevent state modification warnings during view update
+                    Task {@MainActor in
+                        self.onCaptureAnchors(anchors)
                     }
-            } else {
-                context.coordinator.isExtracting = false
-            }
-        } else if !self.saveSessionNow {
-            context.coordinator.isExtracting = false
-        }
-        
+                    
+                } else if !self.saveSessionNow {
+                    // Once TCA sets isSaving = false, we unlock the capture mechanism
+                    context.coordinator.hasFiredCapture = false
+                }
         //the mode and session switching based on tca state
-        guard self.currentMode != context.coordinator.lastMode else { return }
-        context.coordinator.lastMode = self.currentMode
-        context.coordinator.lastReportedReadyState = false
-        
-        switch self.currentMode{
-            case .lidar:
-            let config = ARWorldTrackingConfiguration()
-                        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
-                            config.sceneReconstruction = .meshWithClassification
-                            uiView.debugOptions = [.showSceneUnderstanding]
-                        }
-                        uiView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        case .face:
-            let config = ARFaceTrackingConfiguration()
-             uiView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        case .off:
-            uiView.session.pause()
+        if self.currentMode != context.coordinator.lastMode {
+            context.coordinator.lastMode = self.currentMode
+            context.coordinator.lastReportedReadyState = false
+            switch self.currentMode{
+                case .lidar:
+                let config = ARWorldTrackingConfiguration()
+                            if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
+                                config.sceneReconstruction = .meshWithClassification
+                                uiView.debugOptions = [.showSceneUnderstanding]
+                            }
+                            uiView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+            case .face:
+                let config = ARFaceTrackingConfiguration()
+                 uiView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+            case .off:
+                uiView.session.pause()
+            }
         }
+        
     }
     static func dismantleUIView(_ uiView: ARView, coordinator: Coordinator) {
         uiView.session.pause()
