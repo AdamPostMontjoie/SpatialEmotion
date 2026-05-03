@@ -20,7 +20,7 @@ struct CameraFeature {
      var isSaving:Bool = false
     }
     
-    enum Action {
+    enum Action:Equatable {
         case scanButtonTapped
         case scanCompleted(URL, String?)
         case saveToDataBase
@@ -30,7 +30,7 @@ struct CameraFeature {
         case readyStateChanged(isReady:Bool)
         case setMode(CameraMode)
         case captureAnchors([ARAnchor])
-        enum Delegate {
+        enum Delegate:Equatable {
             case scanSavedToDb(scanId:UUID,objUrl:URL,faceUrl:URL, emotion:String)
         }
       }
@@ -98,6 +98,7 @@ var body: some Reducer<State, Action> {
                 state.savedFaceUrl = url
                 state.detectedEmotion = emotion
                 state.currentMode = .off
+                state.isReadyToScan = false
                 print("SUCCESS: Face Mesh saved to \(url)")
                 return .send(.saveToDataBase)
             }
