@@ -105,7 +105,7 @@ extension ScannerPageFeature {
 extension AlertState where Action == ScannerPageFeature.Action.Alert {
     static func welcome() -> Self {
         Self {
-            TextState("Welcome to SpatialEmotion")
+            TextState("Welcome to SpatialEmotion!")
         } actions: {
             // 3. Map the button to your Action.Alert case
             ButtonState(action: .finishedWelcome) {
