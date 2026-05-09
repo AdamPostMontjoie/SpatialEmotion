@@ -1,18 +1,29 @@
 import ComposableArchitecture
+import Sharing
+import Foundation
 
 @Reducer
 struct ScannerPageFeature {
     @ObservableState
     struct State: Equatable {
-        // 1. The Root (Always visible at the bottom of the stack)
+        // Always visible
         var camera = CameraFeature.State()
-        // 2. The Hallway (For pushing the review screen)
+        // Path to slide on review screen
         var path = StackState<Path.State>()
+        //determines if user has read welcome modal yet from userdefaults
+        @Shared(.appStorage("completedWelcome")) var completedWelcome = false
+        //popup
+        @Presents var destination:Destination.State?
     }
     
     enum Action {
+        case onAppear
         case camera(CameraFeature.Action)
         case path(StackAction<Path.State, Path.Action>)
+        case destination(PresentationAction<Destination.Action>)
+        enum Alert:Equatable {
+            case finishedWelcome
+        }
     }
     
     var body: some ReducerOf<Self> {
@@ -22,6 +33,19 @@ struct ScannerPageFeature {
         
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                if !state.completedWelcome {
+                    state.camera.currentMode = .off
+                    state.destination = .alert(.welcome())
+                } else {
+                    return .send(.camera(.onAppear))
+                }
+                return .none
+            case .destination(.presented(.alert(.finishedWelcome))):
+                    state.$completedWelcome.withLock {$0 = true}
+                    return .send(.camera(.onAppear))
+                    return .none
+                
             case let .camera(.delegate(.scanSavedToDb(id,obj,face,emotion))):
                 
                 let reviewState = ScanReviewFeature.State(
@@ -58,14 +82,39 @@ struct ScannerPageFeature {
                 return .none
             case .path:
                 return .none
+            case .destination:
+                return .none
             }
         }
         .forEach(\.path, action: \.path)
+        .ifLet(\.$destination, action: \.destination)
     }
     
-    @Reducer(state: .equatable)
+    @Reducer
     enum Path {
         case scanReview(ScanReviewFeature)
     }
 }
-
+extension ScannerPageFeature {
+    @Reducer
+    enum Destination {
+        //configure alert
+        case alert(AlertState<ScannerPageFeature.Action.Alert>)
+    }
+}
+extension AlertState where Action == ScannerPageFeature.Action.Alert {
+    static func welcome() -> Self {
+        Self {
+            TextState("Welcome to SpatialEmotion")
+        } actions: {
+            // 3. Map the button to your Action.Alert case
+            ButtonState(action: .finishedWelcome) {
+                TextState("OK")
+            }
+        } message: {
+            TextState("This app uses your FaceID TrueDepth and LiDAR sensor to capture your emotion and the place where you felt it in 3D")
+        }
+    }
+}
+extension ScannerPageFeature.Path.State: Equatable {}
+extension ScannerPageFeature.Destination.State: Equatable {}

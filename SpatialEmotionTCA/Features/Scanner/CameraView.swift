@@ -74,9 +74,7 @@ struct CameraView: View {
         }
         //  The magic line: Tells the ZStack to crossfade changes smoothly
         .animation(.easeInOut(duration: 0.3), value: store.currentMode)
-        .onAppear {
-            store.send(.onAppear)
-        }
+        //onappear controlled by parent
         .onDisappear{
             store.send(.onDisappear)
         }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SceneKit
+import Metal
 
 struct FaceView : UIViewRepresentable {
     let faceNode: SCNNode

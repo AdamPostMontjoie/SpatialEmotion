@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "52E247C72F5B248200AAFA83"
-               BuildableName = "Capture App.app"
-               BlueprintName = "Capture App"
+               BuildableName = "SpatialEmotion.app"
+               BlueprintName = "SpatialEmotion"
                ReferencedContainer = "container:SpatialEmotion.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -41,8 +41,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "523625362F5C948500219978"
-               BuildableName = "Capture AppTests.xctest"
-               BlueprintName = "Capture AppTests"
+               BuildableName = "SpatialEmotion AppTests.xctest"
+               BlueprintName = "SpatialEmotion AppTests"
                ReferencedContainer = "container:SpatialEmotion.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -63,8 +63,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52E247C72F5B248200AAFA83"
-            BuildableName = "Capture App.app"
-            BlueprintName = "Capture App"
+            BuildableName = "SpatialEmotion.app"
+            BlueprintName = "SpatialEmotion"
             ReferencedContainer = "container:SpatialEmotion.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -80,8 +80,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "52E247C72F5B248200AAFA83"
-            BuildableName = "Capture App.app"
-            BlueprintName = "Capture App"
+            BuildableName = "SpatialEmotion.app"
+            BlueprintName = "SpatialEmotion"
             ReferencedContainer = "container:SpatialEmotion.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
