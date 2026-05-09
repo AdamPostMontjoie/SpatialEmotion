@@ -25,7 +25,7 @@ extension Emotion {
 struct NeutralEmotion: Emotion {
     var name:String
     init(){
-        name = "neutrality"
+        name = "Neutrality"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         //penalized emotions
@@ -50,7 +50,7 @@ struct NeutralEmotion: Emotion {
 struct SuprisedEmotion: Emotion {
     var name:String
     init(){
-        name = "suprise"
+        name = "Suprise"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let leftEye = face.blendShapes[.eyeWideLeft]?.doubleValue ?? 0.0
@@ -66,7 +66,7 @@ struct SuprisedEmotion: Emotion {
 struct HappyEmotion: Emotion {
     var name:String
     init(){
-        name = "happiness"
+        name = "Happiness"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let left = face.blendShapes[.mouthSmileLeft]?.doubleValue ?? 0.0
@@ -78,7 +78,7 @@ struct HappyEmotion: Emotion {
 struct SadEmotion: Emotion {
     var name:String
     init(){
-        name = "sadness"
+        name = "Sadness"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let shrugLower = face.blendShapes[.mouthShrugLower]?.doubleValue ?? 0.0
@@ -98,7 +98,7 @@ struct SadEmotion: Emotion {
 struct AngryEmotion: Emotion {
     var name:String
     init(){
-        name = "anger"
+        name = "Anger"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let left = face.blendShapes[.browDownLeft]?.doubleValue ?? 0.0
@@ -135,7 +135,7 @@ struct SpeedEmotion: Emotion {
 struct ConfidenceEmotion: Emotion {
     var name: String
     init(){
-        name = "confidence"
+        name = "Confidence"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let leftSmile = face.blendShapes[.mouthSmileLeft]?.doubleValue ?? 0.0
@@ -160,7 +160,7 @@ struct ConfidenceEmotion: Emotion {
 struct SillinessEmotion: Emotion {
     var name: String
     init(){
-        name = "silliness"
+        name = "Silliness"
     }
     func confidenceScore(for face: ARFaceAnchor) -> Double {
         let tongue = face.blendShapes[.tongueOut]?.doubleValue ?? 0.0
@@ -185,21 +185,43 @@ class EmotionClassification {
             $0.score > $0.threshold
         }
         guard let emotionName = validEmotions.max(by:{$0.score < $1.score})?.name  else {
-            return "unknown"
+            return "Unknown"
         }
         return emotionName
     }
     func emotionToEmoji(_ emotion:String) -> String{
         switch emotion {
-            case "happiness": return "😀"
-            case "sadness": return "😢"
-            case "anger": return "😡"
-            case "suprise": return "😲"
+            case "Happiness": return "😀"
+            case "Sadness": return "😢"
+            case "Anger": return "😡"
+            case "Suprise": return "😲"
             case "IShowSpeed": return "🤭"
-            case "neutrality": return "😐"
-            case "confidence": return "😏"
-            case "silliness":return "😛"
+            case "Neutrality": return "😐"
+            case "Confidence": return "😏"
+            case "Silliness":return "😛"
             default: return "❓"
+        }
+    }
+    func EmotionalColor(_ emotion: String) -> UIColor {
+        switch emotion {
+        case "Happiness":
+            return UIColor(red: 255/255, green: 204/255, blue: 0/255, alpha: 1.0) // Bright Sunny Yellow
+        case "Sadness":
+            return UIColor(red: 20/255, green: 60/255, blue: 150/255, alpha: 1.0) // Deep Blue
+        case "Anger":
+            return UIColor(red: 220/255, green: 20/255, blue: 20/255, alpha: 1.0) // Fiery Red
+        case "IShowSpeed":
+            return UIColor(red: 57/255, green: 255/255, blue: 20/255, alpha: 1.0) // Electric Neon Green
+        case "Neutrality":
+            return UIColor(red: 160/255, green: 160/255, blue: 160/255, alpha: 1.0) // Balanced Gray
+        case "Silliness":
+            return UIColor(red: 255/255, green: 105/255, blue: 180/255, alpha: 1.0) // Hot Pink
+        case "Confidence":
+            return UIColor(red: 100/255, green: 20/255, blue: 200/255, alpha: 1.0) // Bold Royal Purple
+        case "Suprise":
+            return UIColor(red: 0/255, green: 255/255, blue: 255/255, alpha: 1.0) // Shocking Cyan
+        default:
+            return UIColor(red: 30/255, green: 30/255, blue: 30/255, alpha: 1.0) // Dark Charcoal
         }
     }
     private func printBlendShapes(for face: ARFaceAnchor) {

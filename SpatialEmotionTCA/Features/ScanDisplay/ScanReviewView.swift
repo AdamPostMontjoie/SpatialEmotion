@@ -13,13 +13,13 @@ struct ScanReviewView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 30) {
-                Text("A moment of \(store.emotion)")
+                Text("Emotion: \(store.emotion)")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top)
                 
                 if let faceNode = store.faceNode {
-                    FaceView(faceNode: faceNode, faceColor: EmotionalColor(store.emotion))
+                    FaceView(faceNode: faceNode, faceColor: EmotionClassification().EmotionalColor(store.emotion))
                         .frame(height: 300)
                         .cornerRadius(12)
                         .padding(.horizontal)
@@ -35,24 +35,34 @@ struct ScanReviewView: View {
                 }
                 
                 VStack(spacing: 30) {
-                    Text("The place where it happened")
+                    Text("Where it happened")
                         .font(.title)
                         .fontWeight(.bold)
-                    
-                    if let objNode = store.objNode {
-                        ObjectView(objectNode: objNode)
+                    if store.emotion == "IShowSpeed" {
+                        Image("speed") // Replace with your exact Asset catalog name
+                            .resizable()
+                            .scaledToFill()
                             .frame(height: 300)
+                            .frame(maxWidth: .infinity)
+                            .clipped()
                             .cornerRadius(12)
                     } else {
-                        VStack {
-                            ProgressView()
-                                .scaleEffect(1.5)
-                            Text("Loading Object Scan...")
-                                .foregroundColor(.gray)
-                                .padding(.top, 8)
+                        if let objNode = store.objNode {
+                            ObjectView(objectNode: objNode)
+                                .frame(height: 300)
+                                .cornerRadius(12)
+                        } else {
+                            VStack {
+                                ProgressView()
+                                    .scaleEffect(1.5)
+                                Text("Loading Object Scan...")
+                                    .foregroundColor(.gray)
+                                    .padding(.top, 8)
+                            }
+                            .frame(height: 300)
                         }
-                        .frame(height: 300)
                     }
+                    
                     
                     HStack(spacing: 30) {
                         Button("Delete Scan") { store.send(.deleteButtonTapped(store.scanId)) }
@@ -79,25 +89,4 @@ struct ScanReviewView: View {
     }
 }
 
-func EmotionalColor(_ emotion:String) -> UIColor{
-    switch emotion{
-    case "happiness":
-        return .systemYellow
-    case "sadness":
-        return .systemBlue
-    case "anger":
-        return .systemRed
-    case "IShowSpeed":
-        return .systemGreen
-    case "neutrality":
-        return .systemGray
-    case "silliness":
-        return .systemMint
-    case "confidence":
-        return .systemBrown
-    case "suprise":
-        return .systemPink
-    default:
-        return .black
-    }
-}
+

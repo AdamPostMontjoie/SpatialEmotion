@@ -23,25 +23,25 @@
 
 /* Begin PBXFileReference section */
 		523337EC2FA788C0001C2F03 /* Capture App.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Capture App.xctestplan"; sourceTree = "<group>"; };
-		523625372F5C948500219978 /* Capture AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Capture AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		523625372F5C948500219978 /* SpatialEmotion AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SpatialEmotion AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52861E6F2F9D083900C9E73D /* "."gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = "\".\"gitignore"; sourceTree = "<group>"; };
-		52E247C82F5B248200AAFA83 /* Capture App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Capture App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E247C82F5B248200AAFA83 /* SpatialEmotion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpatialEmotion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture App" target */ = {
+		523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				CameraFeatureTests.swift,
 			);
-			target = 52E247C72F5B248200AAFA83 /* Capture App */;
+			target = 52E247C72F5B248200AAFA83 /* SpatialEmotion */;
 		};
-		523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture AppTests" target */ = {
+		523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion AppTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				CameraFeatureTests.swift,
 			);
-			target = 523625362F5C948500219978 /* Capture AppTests */;
+			target = 523625362F5C948500219978 /* SpatialEmotion AppTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -49,8 +49,8 @@
 		523337E52FA77B94001C2F03 /* SpatialEmotionTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture App" target */,
-				523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "Capture AppTests" target */,
+				523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion" target */,
+				523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion AppTests" target */,
 			);
 			path = SpatialEmotionTests;
 			sourceTree = "<group>";
@@ -95,8 +95,8 @@
 		52E247C92F5B248200AAFA83 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				52E247C82F5B248200AAFA83 /* Capture App.app */,
-				523625372F5C948500219978 /* Capture AppTests.xctest */,
+				52E247C82F5B248200AAFA83 /* SpatialEmotion.app */,
+				523625372F5C948500219978 /* SpatialEmotion AppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,9 +104,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		523625362F5C948500219978 /* Capture AppTests */ = {
+		523625362F5C948500219978 /* SpatialEmotion AppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5236253D2F5C948500219978 /* Build configuration list for PBXNativeTarget "Capture AppTests" */;
+			buildConfigurationList = 5236253D2F5C948500219978 /* Build configuration list for PBXNativeTarget "SpatialEmotion AppTests" */;
 			buildPhases = (
 				523625332F5C948500219978 /* Sources */,
 				523625342F5C948500219978 /* Frameworks */,
@@ -117,16 +117,16 @@
 			dependencies = (
 				5236253C2F5C948500219978 /* PBXTargetDependency */,
 			);
-			name = "Capture AppTests";
+			name = "SpatialEmotion AppTests";
 			packageProductDependencies = (
 			);
 			productName = "Capture AppTests";
-			productReference = 523625372F5C948500219978 /* Capture AppTests.xctest */;
+			productReference = 523625372F5C948500219978 /* SpatialEmotion AppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		52E247C72F5B248200AAFA83 /* Capture App */ = {
+		52E247C72F5B248200AAFA83 /* SpatialEmotion */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 52E247D32F5B248600AAFA83 /* Build configuration list for PBXNativeTarget "Capture App" */;
+			buildConfigurationList = 52E247D32F5B248600AAFA83 /* Build configuration list for PBXNativeTarget "SpatialEmotion" */;
 			buildPhases = (
 				52E247C42F5B248200AAFA83 /* Sources */,
 				52E247C52F5B248200AAFA83 /* Frameworks */,
@@ -140,12 +140,12 @@
 				523337E52FA77B94001C2F03 /* SpatialEmotionTests */,
 				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 			);
-			name = "Capture App";
+			name = SpatialEmotion;
 			packageProductDependencies = (
 				523625182F5B5F9A00219978 /* ComposableArchitecture */,
 			);
 			productName = "Capture App";
-			productReference = 52E247C82F5B248200AAFA83 /* Capture App.app */;
+			productReference = 52E247C82F5B248200AAFA83 /* SpatialEmotion.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -184,8 +184,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				52E247C72F5B248200AAFA83 /* Capture App */,
-				523625362F5C948500219978 /* Capture AppTests */,
+				52E247C72F5B248200AAFA83 /* SpatialEmotion */,
+				523625362F5C948500219978 /* SpatialEmotion AppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -228,7 +228,7 @@
 /* Begin PBXTargetDependency section */
 		5236253C2F5C948500219978 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 52E247C72F5B248200AAFA83 /* Capture App */;
+			target = 52E247C72F5B248200AAFA83 /* SpatialEmotion */;
 			targetProxy = 5236253B2F5C948500219978 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -474,7 +474,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5236253D2F5C948500219978 /* Build configuration list for PBXNativeTarget "Capture AppTests" */ = {
+		5236253D2F5C948500219978 /* Build configuration list for PBXNativeTarget "SpatialEmotion AppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5236253E2F5C948500219978 /* Debug */,
@@ -492,7 +492,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		52E247D32F5B248600AAFA83 /* Build configuration list for PBXNativeTarget "Capture App" */ = {
+		52E247D32F5B248600AAFA83 /* Build configuration list for PBXNativeTarget "SpatialEmotion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				52E247D42F5B248600AAFA83 /* Debug */,

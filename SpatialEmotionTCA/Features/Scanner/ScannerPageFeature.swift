@@ -35,11 +35,15 @@ struct ScannerPageFeature {
             switch action {
             case .onAppear:
                 if !state.completedWelcome {
+                    state.camera.currentMode = .off
                     state.destination = .alert(.welcome())
+                } else {
+                    return .send(.camera(.onAppear))
                 }
                 return .none
             case .destination(.presented(.alert(.finishedWelcome))):
                     state.$completedWelcome.withLock {$0 = true}
+                    return .send(.camera(.onAppear))
                     return .none
                 
             case let .camera(.delegate(.scanSavedToDb(id,obj,face,emotion))):
@@ -108,7 +112,7 @@ extension AlertState where Action == ScannerPageFeature.Action.Alert {
                 TextState("OK")
             }
         } message: {
-            TextState("This app uses your camera and LiDAR sensor to analyze spatial data.")
+            TextState("This app uses your FaceID TrueDepth and LiDAR sensor to capture your emotion and the place where you felt it in 3D")
         }
     }
 }
