@@ -37,5 +37,5 @@ After each scan, the `ARAnchor`s are used to build `.usdz` files and are then sa
 
 ## Planned Features
 - Improved emotional accuracy
-- Select and delete all from history
+- Refining basic modal and cleaning up camera state issue
 - More TCA testing
