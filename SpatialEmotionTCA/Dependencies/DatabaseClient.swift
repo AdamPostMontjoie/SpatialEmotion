@@ -33,8 +33,8 @@ extension DatabaseClient: DependencyKey {
             let session = PairedScanSession(
                 id:scanId,
                 name: "Scan \(Date().formatted(date: .abbreviated, time: .shortened))",
-                objURL: objURL,
-                faceURL: faceURL,
+                objFilename: objURL.lastPathComponent,
+                faceFilename: faceURL.lastPathComponent,
                 emotion:emotion,
                 emoji:emoji
             )

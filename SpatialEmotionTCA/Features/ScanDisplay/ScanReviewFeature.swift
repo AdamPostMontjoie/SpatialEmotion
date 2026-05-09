@@ -87,7 +87,7 @@ struct ScanReviewFeature {
           case let .deleteButtonTapped(id): //triggers the confirmation popup
               state.alert = .confirmDeletion(id:id)
               return .none
-          case let .alert(.presented(.confirmDeletion(id))): //the deletion is confirmed
+          case .alert(.presented(.confirmDeletion)): //the deletion is confirmed
                 return .run {[id = state.scanId, obj = state.objURL, face = state.faceURL] send in
                     do {
                   try await databaseClient.deleteSession(id,obj,face)

@@ -63,9 +63,10 @@ struct ScannerPageFeature {
         .forEach(\.path, action: \.path)
     }
     
-    @Reducer(state: .equatable)
+    @Reducer
     enum Path {
         case scanReview(ScanReviewFeature)
     }
 }
 
+extension ScannerPageFeature.Path.State: Equatable {}

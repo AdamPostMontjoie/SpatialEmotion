@@ -33,11 +33,9 @@ After each scan, the `ARAnchor`s are used to build `.usdz` files and are then sa
 
 - **Improved Scene Loading** To guarantee the main thread remains unblocked when parsing heavy .usdz files from the SSD, the ScanReviewFeature reducer leverages TCA's .merge to kick off concurrent .run tasks. The face and object nodes are extracted from storage on a background thread and once parsed, the nodes are sent back to the main thread, updating the state pointer. This state update triggers the `UIViewRepresentable` to instantiate a new `SCNScene`, map the camera, and swap out the loading spinner for the fully rendered 3D mesh. This allows them to load in whenever they're ready instead of waiting for the other to finish.
 
+- **SwiftData File URLS** In order to mantain database performance, the `.usdz` files are saved to the SSD, with the absolute URLs pointing to them saved to SwiftData so we can call up the scenes when needed. However, iOS sandboxes apps, changing the path to the app documents directory on Xcode build or App Store update, causing the URLs to be out of date and making the previous scans inaccesible. This was fixed by instead saving the `.usdz` filenames to SwiftData and using the `@Transient` macro to instead dynamically rebuild the URL when required from the filenames.
+
 ## Planned Features
-- Custom Metal Shading Language on the `SCNViews` for more emotional distinction
 - Improved emotional accuracy
 - Select and delete all from history
 - More TCA testing
-
-## Known Issues
-- USDZ files reference absolute paths invalidated on app reinstall — requires persistent bookmark-based file access, planned fix in progress.

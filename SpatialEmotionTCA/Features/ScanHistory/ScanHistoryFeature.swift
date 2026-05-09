@@ -142,11 +142,12 @@ struct PairedScan:Equatable, Identifiable {
 }
 
 extension ScanHistoryFeature {
-    @Reducer(state: .equatable)
+    @Reducer
     enum Destination {
         case alert(AlertState<ScanHistoryFeature.Action.Alert>)
     }
 }
+extension ScanHistoryFeature.Destination.State: Equatable {}
 extension AlertState where Action == ScanHistoryFeature.Action.Alert {
   static func deleteConfirmation(id: UUID) -> Self {
     Self {

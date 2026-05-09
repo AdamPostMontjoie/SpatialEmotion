@@ -15,19 +15,32 @@ final class PairedScanSession {
     var timestamp: Date
     
     // pointers: These just tell RealityKit where to look on the SSD
-    var objURL: URL
-    var faceURL: URL
+    var objFilename: String
+    var faceFilename: String
     
     var emotion:String
     var emoji:String?
     
+    @Transient
+    var objURL: URL {
+        //this part isn't saved, instead calling session.url calls this in real time and returns
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return docs.appendingPathComponent(objFilename)
+    }
+
+    @Transient
+    var faceURL: URL {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return docs.appendingPathComponent(faceFilename)
+    }
     
-    init(id: UUID = UUID(), name: String, timestamp: Date = Date(), objURL: URL, faceURL: URL, emotion:String, emoji:String) {
+    
+    init(id: UUID = UUID(), name: String, timestamp: Date = Date(), objFilename:String, faceFilename:String, emotion:String, emoji:String) {
         self.id = id
         self.name = name
         self.timestamp = timestamp
-        self.objURL = objURL
-        self.faceURL = faceURL
+        self.objFilename = objFilename
+        self.faceFilename = faceFilename
         self.emotion = emotion
         self.emoji = emoji
     }
