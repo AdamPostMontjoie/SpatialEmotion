@@ -42,7 +42,7 @@ final class ScanHistoryTests: XCTestCase {
                 $0.scans = IdentifiedArray(uniqueElements: mockScans)
             }
         }
-    func testSelfDelete() async {
+    func testDeleteAlert() async {
         let mockMeshURL = URL(string: "file://mock-mesh-path.usdz")!
         let mockFaceURL = URL(string: "file://mock-face-path.usdz")!
         let mockUUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
@@ -66,7 +66,7 @@ final class ScanHistoryTests: XCTestCase {
             $0.destination = nil
         }
     }
-    func testDeleteFailure() async {
+    func testDeletionFailureAlert() async {
         let mockMeshURL = URL(string: "file://mock-mesh-path.usdz")!
         let mockFaceURL = URL(string: "file://mock-face-path.usdz")!
         let mockUUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
@@ -89,6 +89,44 @@ final class ScanHistoryTests: XCTestCase {
         await store.send(.path(.element(id: 0, action: .delegate(.scanFailedToRemove))))
         {
             $0.destination = .alert(.deletionFailure())
+        }
+        await store.send(.destination(.dismiss)){
+            $0.destination = nil
+        }
+    }
+    func testLoadFailureAlert() async {
+        let mockMeshURL = URL(string: "file://mock-mesh-path.usdz")!
+        let mockFaceURL = URL(string: "file://mock-face-path.usdz")!
+        let mockUUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+        let mockDate = Date(timeIntervalSince1970: 0)
+        let reviewState = ScanReviewFeature.State(
+            scanId: mockUUID,
+            objURL: mockMeshURL,
+            faceURL: mockFaceURL,
+            emotion: "Sadness"
+        )
+        let mockScan = PairedScan(
+                    id: mockUUID,
+                    name: "Corrupted Scan",
+                    timestamp: mockDate,
+                    objURL: mockMeshURL,
+                    faceURL: mockFaceURL,
+                    emotion: "Sadness",
+                    emoji: "😢"
+                )
+        let store = TestStore(initialState: ScanHistoryFeature.State(
+            scans: [mockScan],
+            path: StackState([reviewState])
+        )) {
+            ScanHistoryFeature()
+        } withDependencies: {
+            $0.databaseClient.deleteSession = { _, _, _ in }
+        }
+        await store.send(.path(.element(id: 0, action: .delegate(.scanFailedToLoad(mockUUID))))){
+            $0.scans.remove(id:mockUUID)
+        }
+        await store.receive(\.unavailableAlert){
+            $0.destination = .alert(.scanUnavailable())
         }
         await store.send(.destination(.dismiss)){
             $0.destination = nil
