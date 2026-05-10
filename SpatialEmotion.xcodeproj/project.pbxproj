@@ -28,30 +28,9 @@
 		52E247C82F5B248200AAFA83 /* SpatialEmotion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpatialEmotion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				CameraFeatureTests.swift,
-			);
-			target = 52E247C72F5B248200AAFA83 /* SpatialEmotion */;
-		};
-		523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion AppTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				CameraFeatureTests.swift,
-			);
-			target = 523625362F5C948500219978 /* SpatialEmotion AppTests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		523337E52FA77B94001C2F03 /* SpatialEmotionTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				523337E92FA77D62001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion" target */,
-				523337EE2FA78A4F001C2F03 /* Exceptions for "SpatialEmotionTests" folder in "SpatialEmotion AppTests" target */,
-			);
 			path = SpatialEmotionTests;
 			sourceTree = "<group>";
 		};
@@ -117,6 +96,9 @@
 			dependencies = (
 				5236253C2F5C948500219978 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				523337E52FA77B94001C2F03 /* SpatialEmotionTests */,
+			);
 			name = "SpatialEmotion AppTests";
 			packageProductDependencies = (
 			);
@@ -137,7 +119,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				523337E52FA77B94001C2F03 /* SpatialEmotionTests */,
 				52E247CA2F5B248200AAFA83 /* SpatialEmotionTCA */,
 			);
 			name = SpatialEmotion;
@@ -252,7 +233,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Capture App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Capture App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpatialEmotion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpatialEmotion";
 			};
 			name = Debug;
 		};
@@ -274,7 +255,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Capture App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Capture App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpatialEmotion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SpatialEmotion";
 			};
 			name = Release;
 		};

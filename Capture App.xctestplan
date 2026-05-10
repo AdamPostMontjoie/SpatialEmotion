@@ -22,7 +22,7 @@
       "target" : {
         "containerPath" : "container:SpatialEmotion.xcodeproj",
         "identifier" : "523625362F5C948500219978",
-        "name" : "Capture AppTests"
+        "name" : "SpatialEmotion AppTests"
       }
     }
   ],
