@@ -14,7 +14,7 @@ struct DatabaseClient:Sendable {
     //added asynchrony, may cause issues 
     var saveSession: @Sendable (_ scanID:UUID, _ objURL: URL, _ faceURL: URL,_ emotion:String) async throws -> Void
     var deleteSession: @Sendable(_ scanId:UUID, _ objURL: URL, _ faceURL: URL) async throws -> Void
-    var fetchAllSessions: @Sendable() throws -> [PairedScanSession]
+    var fetchAllSessions: @Sendable() throws -> [PairedScan]
 }
 
 //potentially need modelactor?
@@ -23,7 +23,6 @@ extension DatabaseClient: DependencyKey {
         saveSession: {scanId, objURL, faceURL, emotion in //save from camera feature
             //Connect to the existing SQLite database file
             let container = try ModelContainer(for: PairedScanSession.self)
-            
             // Create a fresh context for this specific background task
             let context = ModelContext(container)
             let emoji = EmotionClassification().emotionToEmoji(emotion)
@@ -38,14 +37,11 @@ extension DatabaseClient: DependencyKey {
                 emotion:emotion,
                 emoji:emoji
             )
-            
             context.insert(session)
             try context.save()
         },
-        
         deleteSession: {scanId, objUrl, faceUrl in //delete from scan review
             let fileManager = FileManager.default
-            //delete from filemanager unless already removed
             do {
                 try fileManager.removeItem(at: objUrl)
             } catch{
@@ -56,11 +52,10 @@ extension DatabaseClient: DependencyKey {
             } catch{
                 print("Failed to remove face scan file from system \(error)")
             }
-            
             //Connect to SwiftData
             let container = try ModelContainer(for: PairedScanSession.self)
+
             let context = ModelContext(container)
-            
            // Find the specific record and delete it
             do {
                 let descriptor = FetchDescriptor<PairedScanSession>(predicate: #Predicate { $0.id == scanId })
@@ -71,19 +66,21 @@ extension DatabaseClient: DependencyKey {
             } catch {
                 print("Failed to remove from SwiftData \(error)")
             }
-            
         },
         fetchAllSessions: { //get all for scan history
             let container = try ModelContainer(for: PairedScanSession.self)
             let context = ModelContext(container)
-            
             // Fetch all sessions, sorted by date (newest first)
             var descriptor = FetchDescriptor<PairedScanSession>(sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
-            return try context.fetch(descriptor)
+            let scans = try context.fetch(descriptor)
+            //make value type so i can give to main thread
+            let valueScans = scans.map {
+                PairedScan(id: $0.id, name: $0.name, timestamp: $0.timestamp, objURL: $0.objURL, faceURL: $0.faceURL, emotion: $0.emotion, emoji: $0.emoji ?? "❓")
+            }
+            return valueScans
         }
     )
 }
-
 extension DependencyValues {
     var databaseClient: DatabaseClient {
         get { self[DatabaseClient.self] }

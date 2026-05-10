@@ -41,11 +41,8 @@ struct ScanHistoryFeature {
                 case .onAppear:
                     return .run { send in
                         do {
-                            let sessions = try databaseClient.fetchAllSessions()
-                            let pastScans = sessions.map {
-                                PairedScan(id: $0.id, name: $0.name, timestamp: $0.timestamp, objURL: $0.objURL, faceURL: $0.faceURL, emotion: $0.emotion, emoji: $0.emoji ?? "❓")
-                            }
-                            await send(.scansLoaded(pastScans))
+                            let scans = try databaseClient.fetchAllSessions()
+                            await send(.scansLoaded(scans))
                         } catch {
                             print("ERROR: Failed to fetch sessions - \(error)")
                         }
@@ -66,14 +63,11 @@ struct ScanHistoryFeature {
                     state.destination = .alert(.scanUnavailable())
                     return .none
 
-                case .successAlert
-                    :
+                case .successAlert:
                     state.destination = .alert(.deletionSuccess())
                     return .none
 
-                case .failureAlert,
-                        .path(.element(id: _, action: .delegate(.scanFailedToRemove)))
-                    :
+                case .failureAlert, .path(.element(id: _, action: .delegate(.scanFailedToRemove))):
                     state.destination = .alert(.deletionFailure())
                     return .none
 

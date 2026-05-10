@@ -21,6 +21,7 @@ final class PairedScanSession {
     var emotion:String
     var emoji:String?
     
+    
     @Transient
     var objURL: URL {
         //this part isn't saved, instead calling session.url calls this in real time and returns
